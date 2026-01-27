@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SolicitudGastoApp.Application/SolicitudGastoApp.Application.csproj" />
+  <Project Path="SolicitudGastoApp.Domain/SolicitudGastoApp.Domain.csproj" />
+  <Project Path="SolicitudGastoApp.Infrastructure/SolicitudGastoApp.Infrastructure.csproj" />
+  <Project Path="SolicitudGastoApp.Web/SolicitudGastoApp.Web.csproj" />
+</Solution>
