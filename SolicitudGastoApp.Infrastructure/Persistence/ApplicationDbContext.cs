@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SolicitudGastoApp.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+using SolicitudGastoApp.Infrastructure.Identity;
 
 namespace SolicitudGastoApp.Infrastructure.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<SolicitudGasto> Solicitudes { get; set; } = default!;
 

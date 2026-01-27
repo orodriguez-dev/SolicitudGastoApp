@@ -18,11 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SolicitudGastoApp.Application\SolicitudGastoApp.Application.csproj" />
-    <ProjectReference Include="..\SolicitudGastoApp.Domain\SolicitudGastoApp.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
 
 </Project>
