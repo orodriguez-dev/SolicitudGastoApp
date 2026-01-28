@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SolicitudGastoApp.Application.Abstractions;
+using SolicitudGastoApp.Application.Services;
 using SolicitudGastoApp.Infrastructure.Identity;
 using SolicitudGastoApp.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Identity;
+using SolicitudGastoApp.Infrastructure.Persistence.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +14,15 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddScoped<IApplicationDbContext>(sp =>
+    sp.GetRequiredService<ApplicationDbContext>());
+
+builder.Services.AddScoped<IExpenseRequestService, ExpenseRequestService>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>() //habilita RoleManager y roles
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
@@ -25,6 +34,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    await DbSeeder.SeedAsync(app.Services);
 }
 else
 {
@@ -38,7 +48,7 @@ app.UseRouting();
 
 app.UseAuthentication();    // ✅ necesario
 app.UseAuthorization();
-
+app.MapControllers(); //OBLIGATORIO para APIs con atributos
 app.MapStaticAssets();
 
 app.MapControllerRoute(

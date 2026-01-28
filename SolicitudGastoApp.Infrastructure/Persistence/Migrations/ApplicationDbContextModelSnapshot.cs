@@ -158,6 +158,245 @@ namespace SolicitudGastoApp.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.Approval", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApproverEmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTime?>("DecidedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Decision")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ExpenseRequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverEmployeeId");
+
+                    b.HasIndex("ExpenseRequestId", "StepNumber")
+                        .IsUnique();
+
+                    b.ToTable("Approvals", (string)null);
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.Budget", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("AllocatedAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("AreaCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<decimal>("ConsumedAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaCode", "Year", "Month")
+                        .IsUnique();
+
+                    b.ToTable("Budgets", (string)null);
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.Employee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AreaCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AreaCode");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("IdentityUserId")
+                        .IsUnique();
+
+                    b.ToTable("Employees", (string)null);
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.ExpenseItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("Concept")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EvidenceFileUrl")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("EvidenceNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("ExpenseRequestId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpenseRequestId");
+
+                    b.ToTable("ExpenseItems", (string)null);
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.ExpenseRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("ExceedsBudget")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("MissingEvidence")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateOnly>("RequestDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("RequiresDoubleApproval")
+                        .HasColumnType("boolean");
+
+                    b.Property<byte[]>("RowVersion")
+                        .HasColumnType("bytea");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("EmployeeId", "RequestDate");
+
+                    b.HasIndex("Type", "Status");
+
+                    b.ToTable("ExpenseRequests", (string)null);
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.Policy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("DoubleApprovalThreshold")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<bool>("EvidenceRequired")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ExpenseType")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("RoleLimitAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpenseType", "Role", "IsActive");
+
+                    b.ToTable("Policies", (string)null);
+                });
+
             modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.SolicitudGasto", b =>
                 {
                     b.Property<int>("Id")
@@ -312,11 +551,66 @@ namespace SolicitudGastoApp.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.Approval", b =>
+                {
+                    b.HasOne("SolicitudGastoApp.Domain.Entities.Employee", "ApproverEmployee")
+                        .WithMany("ApprovalsMade")
+                        .HasForeignKey("ApproverEmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SolicitudGastoApp.Domain.Entities.ExpenseRequest", "ExpenseRequest")
+                        .WithMany("Approvals")
+                        .HasForeignKey("ExpenseRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApproverEmployee");
+
+                    b.Navigation("ExpenseRequest");
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.ExpenseItem", b =>
+                {
+                    b.HasOne("SolicitudGastoApp.Domain.Entities.ExpenseRequest", "ExpenseRequest")
+                        .WithMany("Items")
+                        .HasForeignKey("ExpenseRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExpenseRequest");
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.ExpenseRequest", b =>
+                {
+                    b.HasOne("SolicitudGastoApp.Domain.Entities.Employee", "Employee")
+                        .WithMany("ExpenseRequests")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.SolicitudGasto", b =>
                 {
                     b.HasOne("SolicitudGastoApp.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany("Solicitudes")
                         .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.Employee", b =>
+                {
+                    b.Navigation("ApprovalsMade");
+
+                    b.Navigation("ExpenseRequests");
+                });
+
+            modelBuilder.Entity("SolicitudGastoApp.Domain.Entities.ExpenseRequest", b =>
+                {
+                    b.Navigation("Approvals");
+
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("SolicitudGastoApp.Infrastructure.Identity.ApplicationUser", b =>
